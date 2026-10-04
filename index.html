@@ -161,7 +161,7 @@ async function askRealNOVA(question){
   var box=document.getElementById("aiAnswer");
   box.textContent=lang==="ar"?"يفكر NOVA...":lang==="fr"?"NOVA réfléchit...":lang==="en"?"NOVA is thinking...":"NOVA denkt na...";
   try{
-    var res=await fetch("/.netlify/functions/nova-ai",{
+    var res=await fetch("/.netlify/functions/ai",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({message:question,language:lang,history:novaHistory.slice(-6)})
