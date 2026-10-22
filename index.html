@@ -1,182 +1,409 @@
-<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NOVA GRILL</title><style>
-:root{--g:#d5aa57;--bg:#0b0b0c;--card:#171719;--muted:#aaa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f3e8;font-family:Arial,sans-serif}
-header{text-align:center;padding:28px 14px 18px;background:linear-gradient(#211708,#0b0b0c)}h1{letter-spacing:4px;margin:0}h1 span,h2,.price{color:var(--g)}
-.tag{color:var(--muted);margin:7px}.langs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:15px}
-button{font:inherit}.lang,.filter{border:1px solid #333;background:#171719;color:#eee;border-radius:999px;padding:9px 12px;font-weight:bold}.active{background:var(--g);color:#111;border-color:var(--g)}
-main{max-width:680px;margin:auto;padding:10px 15px 90px}.filters{display:flex;gap:6px;overflow:auto;margin:8px 0 18px}
-.dish{width:100%;display:grid;grid-template-columns:1fr 95px;gap:12px;text-align:left;background:var(--card);color:#fff;border:1px solid #2e2e31;border-radius:16px;padding:13px;margin:10px 0;-webkit-tap-highlight-color:transparent}
-.dish:active{transform:scale(.98);border-color:var(--g)}.dish img{width:95px;height:95px;object-fit:cover;border-radius:12px}.name{font-size:17px;font-weight:900}.desc{font-size:13px;color:var(--muted);line-height:1.4;margin-top:6px}.price{font-weight:900;margin-top:6px}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;padding:16px;align-items:flex-end;justify-content:center}
-.sheet{background:#171719;border:1px solid #38383c;border-radius:22px;width:min(100%,650px);padding:16px;max-height:90vh;overflow:auto}.sheet img{width:100%;height:230px;object-fit:cover;border-radius:15px}
-.close{float:right;background:#29292d;color:#fff;border:0;border-radius:50%;width:38px;height:38px;font-weight:bold}.warn{background:#20190d;border:1px solid #59441d;color:#ddc99e;padding:11px;border-radius:11px;font-size:12px}
-.ai{width:100%;padding:14px;background:var(--g);border:0;border-radius:12px;font-weight:900;margin-top:10px}.hint{text-align:center;color:#9b9b9f;font-size:12px;margin:12px}
-.rtl{direction:rtl;text-align:right}
-</style></head><body>
-<header><h1>NOVA <span>GRILL</span></h1><div class="tag">Premium Burgers • Grill • Loaded Fries</div>
-<div class="langs"><button class="lang active" data-lang="nl">🇳🇱 NL</button><button class="lang" data-lang="en">🇬🇧 EN</button><button class="lang" data-lang="fr">🇫🇷 FR</button><button class="lang" data-lang="ar">🇸🇦 العربية</button></div></header>
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Menu</title>
+<meta name="theme-color" content="#0b0b0c">
+<style>
+:root { --g: #d5aa57; --bg: #0b0b0c; --card: #171719; --muted: #aaa; --rand: #2e2e31; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: #f8f3e8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+button { font: inherit; cursor: pointer; }
+header { text-align: center; padding: calc(28px + env(safe-area-inset-top)) 14px 18px; background: linear-gradient(color-mix(in srgb, var(--g) 18%, #0b0b0c), #0b0b0c); }
+h1 { letter-spacing: 3px; margin: 0; font-size: 30px; text-transform: uppercase; }
+h1 .accent, h2, .price { color: var(--g); }
+.tag { color: var(--muted); margin: 7px; }
+.langs { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 15px; }
+.lang, .filter { border: 1px solid #333; background: var(--card); color: #eee; border-radius: 999px; padding: 9px 12px; font-weight: bold; white-space: nowrap; }
+.active { background: var(--g); color: #111; border-color: var(--g); }
+main { max-width: 680px; margin: auto; padding: 10px 15px 110px; }
+.kop { display: flex; justify-content: space-between; align-items: center; margin: 8px 2px 13px; }
+.kop b { font-size: 18px; }
+.kop small { display: block; font-size: 12px; color: #999; margin-top: 3px; }
+#search { width: 100%; padding: 13px 14px; border-radius: 13px; border: 1px solid #333; background: #141416; color: #fff; margin-bottom: 12px; font-size: 16px; }
+.filters { display: flex; gap: 6px; overflow: auto; margin: 8px 0 18px; padding-bottom: 4px; }
+.hint { text-align: center; color: #9b9b9f; font-size: 12px; margin: 12px; }
+.cat-kop { margin: 22px 2px 4px; font-size: 15px; color: var(--g); text-transform: uppercase; letter-spacing: 1px; }
+.dish { width: 100%; display: grid; grid-template-columns: 1fr 95px; gap: 12px; text-align: left; background: var(--card); color: #fff; border: 1px solid var(--rand); border-radius: 16px; padding: 13px; margin: 10px 0; -webkit-tap-highlight-color: transparent; }
+.dish:active { transform: scale(.98); border-color: var(--g); }
+.dish.zonder-foto { grid-template-columns: 1fr; }
+.dish img, .ph { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; }
+.ph { display: flex; align-items: center; justify-content: center; font-size: 38px; background: #222226; }
+.name { font-size: 17px; font-weight: 900; }
+.desc { font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
+.price { font-weight: 900; margin-top: 6px; }
+.labels { margin-top: 8px; font-size: 11px; color: var(--g); letter-spacing: .3px; }
+.leeg { text-align: center; color: var(--muted); padding: 40px 10px; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.82); z-index: 100; padding: 16px; align-items: flex-end; justify-content: center; }
+.overlay.open { display: flex; }
+.sheet { background: var(--card); border: 1px solid #38383c; border-radius: 22px; width: min(100%, 650px); padding: 16px; max-height: 90vh; overflow: auto; }
+.sheet img { width: 100%; height: 230px; object-fit: cover; border-radius: 15px; }
+.close { float: right; background: #29292d; color: #fff; border: 0; border-radius: 50%; width: 38px; height: 38px; font-weight: bold; }
+.warn { background: #20190d; border: 1px solid #59441d; color: #ddc99e; padding: 11px; border-radius: 11px; font-size: 12px; margin-top: 12px; }
+.ai { width: 100%; padding: 14px; background: var(--g); color: #111; border: 0; border-radius: 12px; font-weight: 900; margin-top: 10px; }
+#novaFloat { position: fixed; right: 16px; bottom: calc(17px + env(safe-area-inset-bottom)); z-index: 50; border: 0; border-radius: 999px; padding: 14px 17px; background: var(--g); color: #111; font-weight: 900; box-shadow: 0 8px 28px #000; }
+#aiAnswer { background: #0e0e10; border-radius: 12px; padding: 13px; min-height: 85px; line-height: 1.5; color: #ddd; white-space: pre-line; }
+.ai-rij { display: flex; gap: 7px; margin-top: 10px; }
+#aiQ { flex: 1; min-width: 0; padding: 12px; border-radius: 11px; border: 1px solid #333; background: #0d0d0f; color: #fff; font-size: 16px; }
+.voet { text-align: center; color: #6f6f74; font-size: 12px; margin-top: 36px; }
+.voet a { color: #8d8d92; }
+.rtl { direction: rtl; text-align: right; }
+.rtl .dish { text-align: right; }
+.laden { text-align: center; color: var(--muted); padding: 60px 10px; }
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+<header>
+  <h1 id="titel"></h1>
+  <div class="tag" id="ondertitel"></div>
+  <div class="langs" id="langs"></div>
+</header>
 <main>
-<div style="display:flex;justify-content:space-between;align-items:center;margin:8px 2px 13px">
-<div><b style="font-size:18px">Ontdek ons menu</b><div style="font-size:12px;color:#999;margin-top:3px">Vers bereid • Smart Menu powered by NOVA AI</div></div>
-<div style="font-size:12px;color:#d5aa57">● OPEN</div></div>
-<input id="search" placeholder="🔎 Zoek gerecht..." style="width:100%;padding:13px 14px;border-radius:13px;border:1px solid #333;background:#141416;color:white;margin-bottom:12px;font-size:15px">
-<div class="hint">👇 Tik op een gerecht voor meer informatie</div><div class="filters">
-<button class="filter active" data-filter="all">Alles</button><button class="filter" data-filter="burger">🍔 Burgers</button><button class="filter" data-filter="grill">🔥 Grill</button><button class="filter" data-filter="fries">🍟 Loaded</button><button class="filter" data-filter="drink">🥤 Drinks</button></div><div id="menu"></div></main>
-<button id="novaFloat" style="position:fixed;right:16px;bottom:17px;z-index:50;border:0;border-radius:999px;padding:14px 17px;background:#d5aa57;color:#111;font-weight:900;box-shadow:0 8px 28px #000">✨ NOVA AI</button>
-<div class="overlay" id="aiOverlay"><div class="sheet">
-<button class="close" id="aiClose">✕</button><h2>✨ NOVA AI</h2>
-<p id="aiIntro" class="desc" style="font-size:14px">Vraag iets over het menu.</p>
-<div style="display:flex;gap:6px;overflow:auto;margin:12px 0">
-<button class="filter" id="qChicken" onclick="smartAsk('kip')">🍗 Kip</button>
-<button class="filter" id="qBudget" onclick="smartAsk('20')">💶 Onder €20</button>
-<button class="filter" id="qSpicy" onclick="smartAsk('pittig')">🌶️ Pittig</button></div>
-<div id="aiAnswer" style="background:#0e0e10;border-radius:12px;padding:13px;min-height:85px;line-height:1.5;color:#ddd">Hoi! Probeer: “Ik heb €20 en wil kip.”</div>
-<div style="display:flex;gap:7px;margin-top:10px"><input id="aiQ" placeholder="Typ je vraag..." style="flex:1;min-width:0;padding:12px;border-radius:11px;border:1px solid #333;background:#0d0d0f;color:white"><button id="aiSend" class="ai" style="width:auto;margin:0">➤</button></div>
-</div></div>
-<div class="overlay" id="overlay"><div class="sheet"><button class="close" id="close">✕</button><img id="big"><h2 id="dn"></h2><div class="price" id="dp"></div><p class="desc" id="dd" style="font-size:15px"></p><div class="warn" id="warn"></div><button class="ai" id="ai">✨ Vraag NOVA AI over dit gerecht</button></div></div>
-<script>
-var dishes=[
-{id:"smash",cat:"burger",name:"NOVA Smash",price:"€12,95",img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",d:{nl:"Dubbele smashed beefburger, cheddar, gekaramelliseerde ui, augurk en NOVA-saus.",en:"Double smashed beef burger, cheddar, caramelized onion, pickle and NOVA sauce.",fr:"Double burger de bœuf smashé, cheddar, oignon caramélisé, cornichon et sauce NOVA.",ar:"برغر لحم مزدوج، شيدر، بصل مكرمل، مخلل وصلصة NOVA."}},
-{id:"chicken",cat:"burger",name:"Spicy Chicken 🌶️",price:"€11,95",img:"https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80",d:{nl:"Krokante kip, sla, jalapeño, cheddar en spicy mayo.",en:"Crispy chicken, lettuce, jalapeño, cheddar and spicy mayo.",fr:"Poulet croustillant, salade, jalapeño, cheddar et mayonnaise épicée.",ar:"دجاج مقرمش، خس، هالبينو، شيدر ومايونيز حار."}},
-{id:"grill",cat:"grill",name:"Chicken Grill",price:"€16,95",img:"https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80",d:{nl:"Gegrilde kipfilet, verse kruiden, friet en salade.",en:"Grilled chicken breast, fresh herbs, fries and salad.",fr:"Filet de poulet grillé, herbes fraîches, frites et salade.",ar:"صدر دجاج مشوي، أعشاب طازجة، بطاطس وسلطة."}},
-{id:"mixed",cat:"grill",name:"Mixed Grill",price:"€22,95",img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",d:{nl:"Kip, gekruide beef en lamsvlees met friet, salade en twee sauzen.",en:"Chicken, seasoned beef and lamb with fries, salad and two sauces.",fr:"Poulet, bœuf et agneau avec frites, salade et deux sauces.",ar:"دجاج ولحم بقري ولحم ضأن مع البطاطس والسلطة وصلصتين."}},
-{id:"loaded",cat:"fries",name:"Spicy Chicken Loaded 🌶️",price:"€9,95",img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",d:{nl:"Friet, krokante kip, jalapeño, cheddar en spicy mayo.",en:"Fries, crispy chicken, jalapeño, cheddar and spicy mayo.",fr:"Frites, poulet croustillant, jalapeño, cheddar et mayonnaise épicée.",ar:"بطاطس، دجاج مقرمش، هالبينو، شيدر ومايونيز حار."}},
-{id:"truffle",cat:"burger",name:"Truffle Burger",price:"€14,50",img:"https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80",d:{nl:"Beefburger, cheddar, champignons, gekaramelliseerde ui en romige truffelsaus.",en:"Beef burger, cheddar, mushrooms, caramelized onion and creamy truffle sauce.",fr:"Burger de bœuf, cheddar, champignons, oignon caramélisé et sauce truffe.",ar:"برغر لحم، شيدر، فطر، بصل مكرمل وصلصة ترافل."}},
-{id:"steak",cat:"grill",name:"NOVA Steak",price:"€24,95",img:"https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=600&q=80",d:{nl:"Gegrilde steak met kruidenboter, friet en salade.",en:"Grilled steak with herb butter, fries and salad.",fr:"Steak grillé avec beurre aux herbes, frites et salade.",ar:"ستيك مشوي مع زبدة الأعشاب والبطاطس والسلطة."}},
-{id:"cheesy",cat:"fries",name:"Cheesy Loaded",price:"€7,95",img:"https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=600&q=80",d:{nl:"Friet, cheddar, krokante ui en huisgemaakte saus.",en:"Fries, cheddar, crispy onion and house sauce.",fr:"Frites, cheddar, oignon croustillant et sauce maison.",ar:"بطاطس، شيدر، بصل مقرمش وصلصة خاصة."}},
-{id:"cola",cat:"drink",name:"Coca-Cola",price:"€3,25",img:"https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=600&q=80",d:{nl:"IJskoude Coca-Cola.",en:"Ice-cold Coca-Cola.",fr:"Coca-Cola bien frais.",ar:"كوكا كولا باردة."}},
-{id:"water",cat:"drink",name:"Spa Blauw",price:"€2,75",img:"https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80",d:{nl:"Mineraalwater.",en:"Mineral water.",fr:"Eau minérale.",ar:"مياه معدنية."}},
-{id:"lemonade",cat:"drink",name:"Homemade Lemonade",price:"€4,50",img:"https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9d?auto=format&fit=crop&w=600&q=80",d:{nl:"Huisgemaakte frisse limonade.",en:"Fresh homemade lemonade.",fr:"Limonade maison fraîche.",ar:"ليمونادة منزلية طازجة."}}
-];
-var lang="nl",filter="all";
-function render(){var box=document.getElementById("menu");box.innerHTML="";
-var q=(document.getElementById("search")?document.getElementById("search").value:"").toLowerCase();
-dishes.filter(function(x){return (filter==="all"||x.cat===filter) && (x.name.toLowerCase().includes(q)||x.d[lang].toLowerCase().includes(q))}).forEach(function(x){
-var b=document.createElement("button");b.type="button";b.className="dish";var tags="";
-if(x.id==="chicken"||x.id==="loaded") tags='<div style="margin-top:8px;font-size:11px;color:#d5aa57">🌶️ PITTIG • 🍗 KIP</div>';
-else if(x.id==="grill") tags='<div style="margin-top:8px;font-size:11px;color:#d5aa57">🍗 KIP • 🔥 GRILL</div>';
-else if(x.id==="mixed") tags='<div style="margin-top:8px;font-size:11px;color:#d5aa57">🔥 MIXED GRILL</div>';
-else if(x.id==="cheesy") tags='<div style="margin-top:8px;font-size:11px;color:#d5aa57">🥬 VEGETARISCH*</div>';
-b.innerHTML='<div><div class="name">'+x.name+'</div><div class="price">'+x.price+'</div><div class="desc">'+x.d[lang]+'</div>'+tags+'</div><img src="'+x.img+'" alt="">';
-b.addEventListener("click",function(){openDish(x)});box.appendChild(b);});}
-function openDish(x){document.getElementById("big").src=x.img;document.getElementById("dn").textContent=x.name;document.getElementById("dp").textContent=x.price;document.getElementById("dd").textContent=x.d[lang];document.getElementById("warn").textContent=lang==="ar"?"⚠️ تحقق دائمًا من مسببات الحساسية مع الموظف.":"⚠️ Allergeneninformatie is demo-data. Controleer allergieën altijd bij een medewerker.";document.getElementById("overlay").style.display="flex";}
-document.getElementById("close").addEventListener("click",function(){document.getElementById("overlay").style.display="none"});
-document.getElementById("overlay").addEventListener("click",function(e){if(e.target===this)this.style.display="none"});
-document.querySelectorAll(".lang").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".lang").forEach(function(z){z.classList.remove("active")});b.classList.add("active");lang=b.dataset.lang;document.body.classList.toggle("rtl",lang==="ar");render();updateAILanguage();});});
-document.querySelectorAll(".filter").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll(".filter").forEach(function(z){z.classList.remove("active")});b.classList.add("active");filter=b.dataset.filter;render();});});
-document.getElementById("ai").addEventListener("click",function(){document.getElementById("overlay").style.display="none";document.getElementById("aiOverlay").style.display="flex"});
-document.getElementById("search").addEventListener("input",render);
-var aiO=document.getElementById("aiOverlay");
-document.getElementById("novaFloat").addEventListener("click",function(){aiO.style.display="flex"});
-document.getElementById("aiClose").addEventListener("click",function(){aiO.style.display="none"});
-function euro(s){return parseFloat(s.replace("€","").replace(",","."));}
+  <div class="laden" id="laden">…</div>
+  <div id="inhoud" hidden>
+    <div class="kop"><div><b id="tOntdek"></b><small id="tVers"></small></div></div>
+    <input id="search" type="search" autocomplete="off">
+    <div class="hint" id="tHint"></div>
+    <div class="filters" id="filters"></div>
+    <div id="menu"></div>
+  </div>
+  <p class="voet" id="voet"></p>
+</main>
 
-var aiText={
- nl:{intro:"Vraag iets over het menu.",chicken:"🍗 Kip",budget:"💶 Onder €20",spicy:"🌶️ Pittig",placeholder:"Typ je vraag...",
- hello:"Hoi! Probeer: “Ik heb €20 en wil kip.”",allergy:"⚠️ Voor allergieën doe ik geen aannames. Vraag een medewerker om de actuele allergeneninformatie te bevestigen.",
- none:"Ik vind geen gerecht dat aan al deze wensen voldoet. Probeer een hoger budget of minder filters.",within:"Binnen",fits:"passen",onlyChicken:"Ik heb alleen kipopties binnen je budget meegenomen.",cheapest:"De goedkoopste passende keuze is",combo:"Binnen {b} past bijvoorbeeld {m} + {d} voor {t}.",noCombo:"Ik vind met deze voorkeuren geen maaltijd + drankje binnen dat budget."},
- en:{intro:"Ask me anything about the menu.",chicken:"🍗 Chicken",budget:"💶 Under €20",spicy:"🌶️ Spicy",placeholder:"Type your question...",
- hello:"Hi! Try: “I have €20 and want chicken.”",allergy:"⚠️ I don't guess about allergies. Please ask a staff member to confirm the current allergen information.",
- none:"I couldn't find a dish matching all those preferences. Try a higher budget or fewer filters.",within:"Within",fits:"you can choose",onlyChicken:"I only included chicken options within your budget.",cheapest:"The cheapest matching option is",combo:"Within {b}, you could have {m} + {d} for {t}.",noCombo:"I couldn't find a meal + drink matching those preferences within your budget."},
- fr:{intro:"Posez une question sur le menu.",chicken:"🍗 Poulet",budget:"💶 Moins de 20 €",spicy:"🌶️ Épicé",placeholder:"Écrivez votre question...",
- hello:"Bonjour ! Essayez : « J’ai 20 € et je veux du poulet. »",allergy:"⚠️ Pour les allergies, je ne fais aucune supposition. Demandez à un membre du personnel de confirmer les allergènes.",
- none:"Je ne trouve aucun plat correspondant à tous ces critères. Essayez un budget plus élevé ou moins de filtres.",within:"Avec",fits:"vous pouvez choisir",onlyChicken:"J’ai uniquement inclus les plats au poulet dans votre budget.",cheapest:"L’option correspondante la moins chère est",combo:"Avec {b}, vous pouvez prendre {m} + {d} pour {t}.",noCombo:"Je ne trouve pas de repas + boisson correspondant à ces critères dans votre budget."},
- ar:{intro:"اسألني عن قائمة الطعام.",chicken:"🍗 دجاج",budget:"💶 أقل من 20€",spicy:"🌶️ حار",placeholder:"اكتب سؤالك...",
- hello:"مرحباً! جرّب: «معي 20 يورو وأريد دجاج»",allergy:"⚠️ لا أخمّن معلومات الحساسية. يرجى سؤال أحد الموظفين لتأكيد معلومات مسببات الحساسية الحالية.",
- none:"لم أجد طبقاً يطابق كل هذه الخيارات. جرّب ميزانية أعلى أو شروطاً أقل.",within:"ضمن",fits:"يمكنك اختيار",onlyChicken:"أدرجت فقط خيارات الدجاج ضمن ميزانيتك.",cheapest:"أرخص خيار مناسب هو",combo:"ضمن {b} يمكنك اختيار {m} + {d} مقابل {t}.",noCombo:"لم أجد وجبة مع مشروب تطابق هذه الخيارات ضمن ميزانيتك."}
+<button id="novaFloat" hidden>✨ NOVA AI</button>
+
+<div class="overlay" id="aiOverlay"><div class="sheet" role="dialog" aria-modal="true">
+  <button class="close" id="aiClose" aria-label="Sluiten">✕</button>
+  <h2>✨ NOVA AI</h2>
+  <p id="aiIntro" class="desc" style="font-size:14px"></p>
+  <div class="filters" id="snelVragen"></div>
+  <div id="aiAnswer"></div>
+  <div class="ai-rij"><input id="aiQ" maxlength="300"><button id="aiSend" class="ai" style="width:auto;margin:0" aria-label="Versturen">➤</button></div>
+</div></div>
+
+<div class="overlay" id="overlay"><div class="sheet" role="dialog" aria-modal="true">
+  <button class="close" id="close" aria-label="Sluiten">✕</button>
+  <img id="big" alt="">
+  <h2 id="dn"></h2>
+  <div class="price" id="dp"></div>
+  <p class="desc" id="dd" style="font-size:15px"></p>
+  <div class="labels" id="dl"></div>
+  <div class="warn" id="warn"></div>
+  <button class="ai" id="ai"></button>
+</div></div>
+
+<script>
+/* ===================== Teksten ===================== */
+var UI = {
+  nl: { naam: '🇳🇱 NL', locale: 'nl-NL', ontdek: 'Ontdek ons menu', vers: 'Vers bereid • Smart Menu powered by NOVA AI', zoek: '🔎 Zoek gerecht...', hint: '👇 Tik op een gerecht voor meer informatie', alles: 'Alles', geen: 'Geen gerechten gevonden.', vraagGerecht: '✨ Vraag NOVA AI over dit gerecht', allergie: '⚠️ Controleer allergieën altijd bij een medewerker.', nietGevonden: 'Dit menu bestaat niet (meer). Controleer de link of vraag een medewerker.', fout: 'Het menu kon niet worden geladen. Controleer je internet en probeer het opnieuw.', voet: 'Digitale menukaart door', intro: 'Vraag iets over het menu.', hallo: 'Hoi! Probeer: “Ik heb €20 en wil kip.”', typ: 'Typ je vraag...', denkt: 'NOVA denkt na...', geenAI: 'NOVA AI kon nu niet verbinden. Probeer het zo opnieuw.', kip: '🍗 Kip', budget: '💶 Onder €20', pittig: '🌶️ Pittig', vega: '🥬 Vega', allergieAI: '⚠️ Voor allergieën doe ik geen aannames. Vraag een medewerker om de actuele allergeneninformatie te bevestigen.', none: 'Ik vind geen gerecht dat aan al deze wensen voldoet. Probeer een hoger budget of minder wensen.', within: 'Binnen {b} kun je kiezen uit', options: 'Je kunt kiezen uit', cheapest: 'De goedkoopste passende keuze is', combo: 'Binnen {b} past bijvoorbeeld {m} + {d} voor {t}.', noCombo: 'Ik vind met deze wensen geen gerecht + drankje binnen dat budget.' },
+  en: { naam: '🇬🇧 EN', locale: 'en-GB', ontdek: 'Discover our menu', vers: 'Freshly made • Smart Menu powered by NOVA AI', zoek: '🔎 Search dishes...', hint: '👇 Tap a dish for more information', alles: 'All', geen: 'No dishes found.', vraagGerecht: '✨ Ask NOVA AI about this dish', allergie: '⚠️ Always check allergies with a staff member.', nietGevonden: 'This menu does not exist (anymore). Check the link or ask a staff member.', fout: 'The menu could not be loaded. Check your internet and try again.', voet: 'Digital menu by', intro: 'Ask me anything about the menu.', hallo: 'Hi! Try: “I have €20 and want chicken.”', typ: 'Type your question...', denkt: 'NOVA is thinking...', geenAI: 'NOVA AI could not connect right now. Please try again shortly.', kip: '🍗 Chicken', budget: '💶 Under €20', pittig: '🌶️ Spicy', vega: '🥬 Veggie', allergieAI: '⚠️ I don\'t guess about allergies. Please ask a staff member to confirm the current allergen information.', none: 'I couldn\'t find a dish matching all those wishes. Try a higher budget or fewer wishes.', within: 'Within {b} you can choose from', options: 'You can choose from', cheapest: 'The cheapest matching option is', combo: 'Within {b}, you could have {m} + {d} for {t}.', noCombo: 'I couldn\'t find a dish + drink matching those wishes within your budget.' },
+  fr: { naam: '🇫🇷 FR', locale: 'fr-FR', ontdek: 'Découvrez notre menu', vers: 'Fait maison • Smart Menu par NOVA AI', zoek: '🔎 Rechercher un plat...', hint: '👇 Touchez un plat pour plus d’informations', alles: 'Tout', geen: 'Aucun plat trouvé.', vraagGerecht: '✨ Demander à NOVA AI', allergie: '⚠️ Vérifiez toujours les allergies auprès du personnel.', nietGevonden: 'Ce menu n’existe pas (ou plus). Vérifiez le lien ou demandez au personnel.', fout: 'Le menu n’a pas pu être chargé. Vérifiez votre connexion et réessayez.', voet: 'Menu digital par', intro: 'Posez une question sur le menu.', hallo: 'Bonjour ! Essayez : « J’ai 20 € et je veux du poulet. »', typ: 'Écrivez votre question...', denkt: 'NOVA réfléchit...', geenAI: 'NOVA AI n’a pas pu se connecter. Réessayez dans un instant.', kip: '🍗 Poulet', budget: '💶 Moins de 20 €', pittig: '🌶️ Épicé', vega: '🥬 Végé', allergieAI: '⚠️ Pour les allergies, je ne fais aucune supposition. Demandez au personnel de confirmer les allergènes.', none: 'Je ne trouve aucun plat correspondant. Essayez un budget plus élevé ou moins de critères.', within: 'Avec {b}, vous pouvez choisir', options: 'Vous pouvez choisir', cheapest: 'L’option la moins chère est', combo: 'Avec {b}, vous pouvez prendre {m} + {d} pour {t}.', noCombo: 'Je ne trouve pas de plat + boisson correspondant dans votre budget.' },
+  ar: { naam: '🇸🇦 العربية', locale: 'ar', ontdek: 'اكتشف قائمتنا', vers: 'طازج • قائمة ذكية من NOVA AI', zoek: '🔎 ابحث عن طبق...', hint: '👇 اضغط على طبق لمزيد من المعلومات', alles: 'الكل', geen: 'لم يتم العثور على أطباق.', vraagGerecht: '✨ اسأل NOVA AI عن هذا الطبق', allergie: '⚠️ تحقق دائمًا من مسببات الحساسية مع الموظف.', nietGevonden: 'هذه القائمة غير موجودة. تحقق من الرابط أو اسأل أحد الموظفين.', fout: 'تعذر تحميل القائمة. تحقق من الإنترنت وحاول مرة أخرى.', voet: 'قائمة رقمية من', intro: 'اسألني عن قائمة الطعام.', hallo: 'مرحباً! جرّب: «معي 20 يورو وأريد دجاج»', typ: 'اكتب سؤالك...', denkt: 'يفكر NOVA...', geenAI: 'تعذر الاتصال بالذكاء الاصطناعي الآن. حاول مرة أخرى بعد قليل.', kip: '🍗 دجاج', budget: '💶 أقل من 20€', pittig: '🌶️ حار', vega: '🥬 نباتي', allergieAI: '⚠️ لا أخمّن معلومات الحساسية. يرجى سؤال أحد الموظفين.', none: 'لم أجد طبقاً يطابق كل هذه الخيارات. جرّب ميزانية أعلى أو شروطاً أقل.', within: 'ضمن {b} يمكنك اختيار', options: 'يمكنك اختيار', cheapest: 'أرخص خيار مناسب هو', combo: 'ضمن {b} يمكنك اختيار {m} + {d} مقابل {t}.', noCombo: 'لم أجد طبقاً مع مشروب ضمن ميزانيتك.' }
 };
 
-function normalizeArabicDigits(x){
- var map={"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9","٫":"."};
- return x.replace(/[٠-٩٫]/g,function(c){return map[c]||c});
+// Labels die de eigenaar per gerecht kan aanvinken.
+var LABELS = {
+  kip:    { nl: '🍗 KIP', en: '🍗 CHICKEN', fr: '🍗 POULET', ar: '🍗 دجاج' },
+  rund:   { nl: '🥩 RUND', en: '🥩 BEEF', fr: '🥩 BŒUF', ar: '🥩 لحم بقري' },
+  lam:    { nl: '🐑 LAM', en: '🐑 LAMB', fr: '🐑 AGNEAU', ar: '🐑 لحم ضأن' },
+  vis:    { nl: '🐟 VIS', en: '🐟 FISH', fr: '🐟 POISSON', ar: '🐟 سمك' },
+  pittig: { nl: '🌶️ PITTIG', en: '🌶️ SPICY', fr: '🌶️ ÉPICÉ', ar: '🌶️ حار' },
+  vega:   { nl: '🥬 VEGETARISCH', en: '🥬 VEGETARIAN', fr: '🥬 VÉGÉTARIEN', ar: '🥬 نباتي' },
+  vegan:  { nl: '🌱 VEGAN', en: '🌱 VEGAN', fr: '🌱 VÉGAN', ar: '🌱 نباتي صرف' },
+  halal:  { nl: '☪️ HALAL', en: '☪️ HALAL', fr: '☪️ HALAL', ar: '☪️ حلال' },
+  drank:  { nl: '🥤 DRANKJE', en: '🥤 DRINK', fr: '🥤 BOISSON', ar: '🥤 مشروب' }
+};
+
+/* ===================== Demo (zonder link naar een restaurant) ===================== */
+function u(id) { return 'https://images.unsplash.com/photo-' + id + '?auto=format&fit=crop&w=600&q=80'; }
+var DEMO = {
+  restaurant: { slug: 'demo', naam: 'NOVA GRILL', ondertitel: 'Premium Burgers • Grill • Loaded Fries', kleur: '#d5aa57', talen: ['nl', 'en', 'fr', 'ar'], ai_aan: true },
+  categorieen: [
+    { id: 'burger', emoji: '🍔', naam: { nl: 'Burgers', en: 'Burgers', fr: 'Burgers', ar: 'برغر' } },
+    { id: 'grill', emoji: '🔥', naam: { nl: 'Grill', en: 'Grill', fr: 'Grill', ar: 'مشويات' } },
+    { id: 'fries', emoji: '🍟', naam: { nl: 'Loaded', en: 'Loaded', fr: 'Loaded', ar: 'بطاطس محملة' } },
+    { id: 'drink', emoji: '🥤', naam: { nl: 'Drinks', en: 'Drinks', fr: 'Boissons', ar: 'مشروبات' } }
+  ],
+  gerechten: [
+    { categorie_id: 'burger', naam: 'NOVA Smash', prijs: 12.95, foto: u('1568901346375-23c9450c58cd'), labels: ['rund'], beschrijving: { nl: 'Dubbele smashed beefburger, cheddar, gekaramelliseerde ui, augurk en NOVA-saus.', en: 'Double smashed beef burger, cheddar, caramelized onion, pickle and NOVA sauce.', fr: 'Double burger de bœuf smashé, cheddar, oignon caramélisé, cornichon et sauce NOVA.', ar: 'برغر لحم مزدوج، شيدر، بصل مكرمل، مخلل وصلصة NOVA.' } },
+    { categorie_id: 'burger', naam: 'Spicy Chicken 🌶️', prijs: 11.95, foto: u('1562967914-608f82629710'), labels: ['kip', 'pittig'], beschrijving: { nl: 'Krokante kip, sla, jalapeño, cheddar en spicy mayo.', en: 'Crispy chicken, lettuce, jalapeño, cheddar and spicy mayo.', fr: 'Poulet croustillant, salade, jalapeño, cheddar et mayonnaise épicée.', ar: 'دجاج مقرمش، خس، هالبينو، شيدر ومايونيز حار.' } },
+    { categorie_id: 'burger', naam: 'Truffle Burger', prijs: 14.50, foto: u('1550547660-d9450f859349'), labels: ['rund'], beschrijving: { nl: 'Beefburger, cheddar, champignons, gekaramelliseerde ui en romige truffelsaus.', en: 'Beef burger, cheddar, mushrooms, caramelized onion and creamy truffle sauce.', fr: 'Burger de bœuf, cheddar, champignons, oignon caramélisé et sauce truffe.', ar: 'برغر لحم، شيدر، فطر، بصل مكرمل وصلصة ترافل.' } },
+    { categorie_id: 'grill', naam: 'Chicken Grill', prijs: 16.95, foto: u('1532550907401-a500c9a57435'), labels: ['kip'], beschrijving: { nl: 'Gegrilde kipfilet, verse kruiden, friet en salade.', en: 'Grilled chicken breast, fresh herbs, fries and salad.', fr: 'Filet de poulet grillé, herbes fraîches, frites et salade.', ar: 'صدر دجاج مشوي، أعشاب طازجة، بطاطس وسلطة.' } },
+    { categorie_id: 'grill', naam: 'Mixed Grill', prijs: 22.95, foto: u('1544025162-d76694265947'), labels: ['kip', 'rund', 'lam'], beschrijving: { nl: 'Kip, gekruide beef en lamsvlees met friet, salade en twee sauzen.', en: 'Chicken, seasoned beef and lamb with fries, salad and two sauces.', fr: 'Poulet, bœuf et agneau avec frites, salade et deux sauces.', ar: 'دجاج ولحم بقري ولحم ضأن مع البطاطس والسلطة وصلصتين.' } },
+    { categorie_id: 'grill', naam: 'NOVA Steak', prijs: 24.95, foto: u('1600891964092-4316c288032e'), labels: ['rund'], beschrijving: { nl: 'Gegrilde steak met kruidenboter, friet en salade.', en: 'Grilled steak with herb butter, fries and salad.', fr: 'Steak grillé avec beurre aux herbes, frites et salade.', ar: 'ستيك مشوي مع زبدة الأعشاب والبطاطس والسلطة.' } },
+    { categorie_id: 'fries', naam: 'Spicy Chicken Loaded 🌶️', prijs: 9.95, foto: u('1573080496219-bb080dd4f877'), labels: ['kip', 'pittig'], beschrijving: { nl: 'Friet, krokante kip, jalapeño, cheddar en spicy mayo.', en: 'Fries, crispy chicken, jalapeño, cheddar and spicy mayo.', fr: 'Frites, poulet croustillant, jalapeño, cheddar et mayonnaise épicée.', ar: 'بطاطس، دجاج مقرمش، هالبينو، شيدر ومايونيز حار.' } },
+    { categorie_id: 'fries', naam: 'Cheesy Loaded', prijs: 7.95, foto: u('1630384060421-cb20d0e0649d'), labels: ['vega'], beschrijving: { nl: 'Friet, cheddar, krokante ui en huisgemaakte saus.', en: 'Fries, cheddar, crispy onion and house sauce.', fr: 'Frites, cheddar, oignon croustillant et sauce maison.', ar: 'بطاطس، شيدر، بصل مقرمش وصلصة خاصة.' } },
+    { categorie_id: 'drink', naam: 'Coca-Cola', prijs: 3.25, foto: u('1629203851122-3726ecdf080e'), labels: ['drank'], beschrijving: { nl: 'IJskoude Coca-Cola.', en: 'Ice-cold Coca-Cola.', fr: 'Coca-Cola bien frais.', ar: 'كوكا كولا باردة.' } },
+    { categorie_id: 'drink', naam: 'Spa Blauw', prijs: 2.75, foto: u('1548839140-29a749e1cf4d'), labels: ['drank'], beschrijving: { nl: 'Mineraalwater.', en: 'Mineral water.', fr: 'Eau minérale.', ar: 'مياه معدنية.' } },
+    { categorie_id: 'drink', naam: 'Homemade Lemonade', prijs: 4.50, foto: u('1523677011781-c91d1bbe2f9d'), labels: ['drank'], beschrijving: { nl: 'Huisgemaakte frisse limonade.', en: 'Fresh homemade lemonade.', fr: 'Limonade maison fraîche.', ar: 'ليمونادة منزلية طازجة.' } }
+  ]
+};
+
+/* ===================== Hulpjes ===================== */
+var $ = function (id) { return document.getElementById(id); };
+var restaurant = null, categorieen = [], gerechten = [];
+var lang = 'nl', filter = 'all';
+
+function el(tag, props, kinderen) {
+  var e = document.createElement(tag);
+  if (props) Object.keys(props).forEach(function (k) { e[k] = props[k]; });
+  (kinderen || []).forEach(function (k) { if (k) e.append(k); });
+  return e;
 }
-function hasAny(q,words){return words.some(function(w){return q.indexOf(w)>-1})}
-function smartAsk(raw){
- var q=normalizeArabicDigits((raw||"").toLowerCase().trim());
- var T=aiText[lang]||aiText.nl;
- var budgetMatch=q.match(/(?:€\s*)?(\d+(?:[.,]\d{1,2})?)\s*(?:euro|euros|€|يورو)?/);
- var budget=budgetMatch?parseFloat(budgetMatch[1].replace(",",".")):null;
+function T() { return UI[lang] || UI.nl; }
+function inTaal(obj) { return (obj && (obj[lang] || obj.nl || obj.en)) || ''; }
+function prijsTekst(p) { return new Intl.NumberFormat(T().locale, { style: 'currency', currency: 'EUR' }).format(Number(p) || 0); }
+function heeft(g, label) { return (g.labels || []).indexOf(label) > -1; }
+function catVan(g) { return categorieen.find(function (c) { return c.id === g.categorie_id; }); }
+function veiligeKleur(k) { return /^#[0-9a-fA-F]{6}$/.test(k || '') ? k : '#d5aa57'; }
+function veiligeFoto(url) { return /^https:\/\//.test(url || '') ? url : ''; }
 
- var wantsChicken=hasAny(q,["kip","chicken","poulet","دجاج","فراخ"]);
- var wantsSpicy=hasAny(q,["pitt","spicy","hot","épic","epic","حار","حارة"]);
- var wantsDrink=hasAny(q,["drank","drinken","drink","boisson","cola","lemonade","مشروب","شراب","كولا"]);
- var wantsCheap=hasAny(q,["goedkoop","goedkoopste","cheap","cheapest","moins cher","le moins cher","رخيص","ارخص","أرخص"]);
- var noBeef=hasAny(q,["geen rund","geen beef","zonder rund","no beef","without beef","sans boeuf","sans bœuf","بدون لحم بقري","لا أريد لحم بقري"]);
- var allergy=hasAny(q,["allerg","noten","melk","gluten","allergy","nuts","milk","allergie","noix","lait","حساسية","مكسرات","حليب","غلوتين"]);
-
- var items=dishes.slice();
- if(wantsChicken) items=items.filter(function(x){return ["chicken","grill","mixed","loaded"].includes(x.id)});
- if(wantsSpicy) items=items.filter(function(x){return ["chicken","loaded"].includes(x.id)});
- if(noBeef) items=items.filter(function(x){return !["smash","truffle","mixed","steak"].includes(x.id)});
- if(budget!==null) items=items.filter(function(x){return euro(x.price)<=budget});
- items.sort(function(a,b){return euro(a.price)-euro(b.price)});
-
- var a="";
- if(allergy){
-   a=T.allergy;
- } else if(wantsDrink && budget!==null){
-   var drinks=[{n:"Spa Blauw",p:2.75},{n:"Coca-Cola",p:3.25},{n:"Fanta",p:3.25},{n:"Homemade Lemonade",p:4.50}];
-   var meals=items.filter(function(x){return x.cat!=="drink"});
-   var combos=[];
-   meals.forEach(function(m){drinks.forEach(function(d){if(euro(m.price)+d.p<=budget) combos.push({m:m,d:d,total:euro(m.price)+d.p})})});
-   combos.sort(function(a,b){return b.total-a.total});
-   if(combos.length){
-     var c=combos[0];
-     a=T.combo.replace("{b}","€"+budget.toFixed(2).replace(".",",")).replace("{m}",c.m.name).replace("{d}",c.d.n).replace("{t}","€"+c.total.toFixed(2).replace(".",","));
-   } else a=T.noCombo;
- } else if(items.length){
-   if(wantsCheap){
-     var x=items[0]; a=T.cheapest+" "+x.name+" ("+x.price+").";
-   } else {
-     var shown=items.slice(0,4);
-     if(lang==="ar"){
-       a=(budget!==null?T.within+" €"+budget.toFixed(2).replace(".",",")+" ":"")+T.fits+": "+shown.map(function(x){return x.name+" ("+x.price+")"}).join("، ")+".";
-     } else if(lang==="fr"){
-       a=(budget!==null?T.within+" "+budget.toFixed(2).replace(".",",")+" € ":"")+T.fits+" : "+shown.map(function(x){return x.name+" ("+x.price+")"}).join(", ")+".";
-     } else {
-       a=(budget!==null?T.within+" €"+budget.toFixed(2).replace(".",",")+" ":"")+T.fits+": "+shown.map(function(x){return x.name+" ("+x.price+")"}).join(", ")+".";
-     }
-     if(wantsChicken&&budget!==null) a+=" "+T.onlyChicken;
-   }
- } else a=T.none;
- document.getElementById("aiAnswer").textContent=a;
-}
-
-function updateAILanguage(){
- var T=aiText[lang]||aiText.nl;
- document.getElementById("aiIntro").textContent=T.intro;
- document.getElementById("qChicken").textContent=T.chicken;
- document.getElementById("qBudget").textContent=T.budget;
- document.getElementById("qSpicy").textContent=T.spicy;
- document.getElementById("aiQ").placeholder=T.placeholder;
- document.getElementById("aiAnswer").textContent=T.hello;
- document.getElementById("aiOverlay").classList.toggle("rtl",lang==="ar");
+/* ===================== Laden ===================== */
+async function rest(pad) {
+  var c = window.SMARTMENU || {};
+  var res = await fetch(c.supabaseUrl + '/rest/v1/' + pad, { headers: { apikey: c.supabaseKey } });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
 }
 
-var novaHistory=[];
-async function askRealNOVA(question){
-  question=(question||"").trim();
-  if(!question)return;
-  var box=document.getElementById("aiAnswer");
-  box.textContent=lang==="ar"?"يفكر NOVA...":lang==="fr"?"NOVA réfléchit...":lang==="en"?"NOVA is thinking...":"NOVA denkt na...";
-  try{
-    var res=await fetch("/.netlify/functions/ai",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({message:question,language:lang,history:novaHistory.slice(-6)})
-    });
-    var data=await res.json();
-    if(!res.ok) throw new Error(data.error||"AI error");
-    box.textContent=data.answer;
-    novaHistory.push({role:"user",content:question},{role:"assistant",content:data.answer});
-  }catch(e){
-    box.textContent=(lang==="ar"?"تعذر الاتصال بالذكاء الاصطناعي الآن. ":"NOVA AI kon nu niet verbinden. ")+"("+e.message+")";
+async function laad() {
+  var slug = (new URLSearchParams(location.search).get('r') || '').trim().toLowerCase();
+  var c = window.SMARTMENU || {};
+  if (!slug || slug === 'demo' || !c.supabaseUrl || !c.supabaseKey) {
+    restaurant = DEMO.restaurant; categorieen = DEMO.categorieen; gerechten = DEMO.gerechten;
+    return toon();
+  }
+  try {
+    var r = await rest('restaurants?slug=eq.' + encodeURIComponent(slug) + '&select=id,slug,naam,ondertitel,kleur,talen,ai_aan');
+    if (!r.length) return foutmelding('nietGevonden');
+    restaurant = r[0];
+    var id = encodeURIComponent(restaurant.id);
+    var res = await Promise.all([
+      rest('categorieen?restaurant_id=eq.' + id + '&select=id,naam,emoji,volgorde&order=volgorde.asc'),
+      rest('gerechten?restaurant_id=eq.' + id + '&beschikbaar=eq.true&select=id,categorie_id,naam,prijs,beschrijving,foto,labels,volgorde&order=volgorde.asc,naam.asc')
+    ]);
+    categorieen = res[0]; gerechten = res[1];
+    toon();
+  } catch (e) {
+    console.error(e);
+    foutmelding('fout');
   }
 }
 
-window.smartAsk=smartAsk;
-document.getElementById("aiSend").addEventListener("click",function(){askRealNOVA(document.getElementById("aiQ").value)});
-document.getElementById("aiQ").addEventListener("keydown",function(e){if(e.key==="Enter")askRealNOVA(this.value)});
-render();updateAILanguage();
-</script></body></html>
+function kiesStartTaal() {
+  var talen = (restaurant.talen && restaurant.talen.length) ? restaurant.talen.filter(function (t) { return UI[t]; }) : ['nl'];
+  restaurant.talen = talen.length ? talen : ['nl'];
+  var bewaard = null;
+  try { bewaard = localStorage.getItem('smartmenu-taal'); } catch (e) {}
+  var toestel = (navigator.language || 'nl').slice(0, 2);
+  lang = [bewaard, toestel, 'nl', restaurant.talen[0]].find(function (t) { return t && restaurant.talen.indexOf(t) > -1; });
+}
+
+function foutmelding(sleutel) {
+  kiesStartTaalVeilig();
+  $('laden').textContent = T()[sleutel];
+}
+function kiesStartTaalVeilig() { var t = (navigator.language || 'nl').slice(0, 2); lang = UI[t] ? t : 'nl'; }
+
+/* ===================== Tonen ===================== */
+function toon() {
+  kiesStartTaal();
+  document.documentElement.style.setProperty('--g', veiligeKleur(restaurant.kleur));
+  document.title = restaurant.naam;
+
+  // Titel: laatste woord in de accentkleur, zoals het origineel ("NOVA GRILL").
+  var woorden = restaurant.naam.trim().split(/\s+/);
+  $('titel').replaceChildren(woorden.length > 1 ? woorden.slice(0, -1).join(' ') + ' ' : '', el('span', { className: 'accent', textContent: woorden[woorden.length - 1] }));
+  $('ondertitel').textContent = restaurant.ondertitel || '';
+
+  $('langs').replaceChildren();
+  if (restaurant.talen.length > 1) restaurant.talen.forEach(function (t) {
+    $('langs').append(el('button', { className: 'lang' + (t === lang ? ' active' : ''), textContent: UI[t].naam, onclick: function () { kiesTaal(t); } }));
+  });
+
+  $('novaFloat').hidden = !restaurant.ai_aan;
+  $('ai').hidden = !restaurant.ai_aan;
+  $('laden').hidden = true;
+  $('inhoud').hidden = false;
+  vertaal();
+}
+
+function kiesTaal(t) {
+  lang = t;
+  try { localStorage.setItem('smartmenu-taal', t); } catch (e) {}
+  [].forEach.call(document.querySelectorAll('.lang'), function (b) { b.classList.toggle('active', b.textContent === UI[t].naam); });
+  vertaal();
+}
+
+function vertaal() {
+  var t = T();
+  document.documentElement.lang = lang;
+  document.body.classList.toggle('rtl', lang === 'ar');
+  $('tOntdek').textContent = t.ontdek;
+  $('tVers').textContent = restaurant.ai_aan ? t.vers : t.vers.split('•')[0].trim();
+  $('search').placeholder = t.zoek;
+  $('tHint').textContent = t.hint;
+  $('ai').textContent = t.vraagGerecht;
+  $('aiIntro').textContent = t.intro;
+  $('aiQ').placeholder = t.typ;
+  $('aiAnswer').textContent = t.hallo;
+  $('voet').replaceChildren(t.voet + ' ', el('a', { href: './', textContent: 'NOVA SmartMenu' }));
+
+  $('snelVragen').replaceChildren(
+    snelKnop(t.kip, 'kip'), snelKnop(t.budget, '20'), snelKnop(t.pittig, 'pittig'), snelKnop(t.vega, 'vega')
+  );
+  tekenFilters();
+  render();
+}
+
+function snelKnop(tekst, vraag) {
+  return el('button', { className: 'filter', textContent: tekst, onclick: function () { slimAntwoord(vraag); } });
+}
+
+function tekenFilters() {
+  var box = $('filters');
+  box.replaceChildren();
+  var gebruikt = categorieen.filter(function (c) { return gerechten.some(function (g) { return g.categorie_id === c.id; }); });
+  if (gebruikt.length < 2) return;
+  box.append(el('button', { className: 'filter' + (filter === 'all' ? ' active' : ''), textContent: T().alles, onclick: function () { filter = 'all'; tekenFilters(); render(); } }));
+  gebruikt.forEach(function (c) {
+    box.append(el('button', {
+      className: 'filter' + (filter === c.id ? ' active' : ''),
+      textContent: (c.emoji ? c.emoji + ' ' : '') + inTaal(c.naam),
+      onclick: function () { filter = c.id; tekenFilters(); render(); }
+    }));
+  });
+}
+
+function labelTekst(g) {
+  return (g.labels || []).filter(function (l) { return LABELS[l] && l !== 'drank'; }).map(function (l) { return LABELS[l][lang] || LABELS[l].nl; }).join(' • ');
+}
+
+function render() {
+  var box = $('menu');
+  box.replaceChildren();
+  var q = $('search').value.toLowerCase().trim();
+  var lijst = gerechten.filter(function (g) {
+    return (filter === 'all' || g.categorie_id === filter) &&
+      (!q || g.naam.toLowerCase().indexOf(q) > -1 || inTaal(g.beschrijving).toLowerCase().indexOf(q) > -1);
+  });
+  if (!lijst.length) { box.append(el('p', { className: 'leeg', textContent: T().geen })); return; }
+
+  // Bij "Alles" groeperen we per categorie, in de volgorde van de eigenaar.
+  var groepen = [];
+  if (filter === 'all' && !q && categorieen.length > 1) {
+    categorieen.forEach(function (c) { groepen.push({ cat: c, items: lijst.filter(function (g) { return g.categorie_id === c.id; }) }); });
+    groepen.push({ cat: null, items: lijst.filter(function (g) { return !catVan(g); }) });
+  } else groepen.push({ cat: null, items: lijst });
+
+  groepen.forEach(function (gr) {
+    if (!gr.items.length) return;
+    if (gr.cat) box.append(el('h3', { className: 'cat-kop', textContent: (gr.cat.emoji ? gr.cat.emoji + ' ' : '') + inTaal(gr.cat.naam) }));
+    gr.items.forEach(function (g) { box.append(gerechtKaart(g)); });
+  });
+}
+
+function gerechtKaart(g) {
+  var foto = veiligeFoto(g.foto);
+  var cat = catVan(g);
+  var tekst = el('div', null, [
+    el('div', { className: 'name', textContent: g.naam }),
+    el('div', { className: 'price', textContent: prijsTekst(g.prijs) }),
+    inTaal(g.beschrijving) ? el('div', { className: 'desc', textContent: inTaal(g.beschrijving) }) : null,
+    labelTekst(g) ? el('div', { className: 'labels', textContent: labelTekst(g) }) : null
+  ]);
+  var beeld = foto ? el('img', { src: foto, alt: '', loading: 'lazy' })
+    : (cat && cat.emoji ? el('div', { className: 'ph', textContent: cat.emoji }) : null);
+  var knop = el('button', { type: 'button', className: 'dish' + (beeld ? '' : ' zonder-foto'), onclick: function () { openGerecht(g); } }, [tekst, beeld]);
+  return knop;
+}
+
+var huidigGerecht = null;
+function openGerecht(g) {
+  huidigGerecht = g;
+  var foto = veiligeFoto(g.foto);
+  $('big').hidden = !foto;
+  if (foto) $('big').src = foto;
+  $('dn').textContent = g.naam;
+  $('dp').textContent = prijsTekst(g.prijs);
+  $('dd').textContent = inTaal(g.beschrijving);
+  $('dl').textContent = labelTekst(g);
+  $('warn').textContent = T().allergie;
+  $('overlay').classList.add('open');
+}
+
+/* ===================== NOVA AI ===================== */
+function normaliseerCijfers(x) {
+  var map = { '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9', '٫': '.' };
+  return x.replace(/[٠-٩٫]/g, function (c) { return map[c] || c; });
+}
+function bevat(q, woorden) { return woorden.some(function (w) { return q.indexOf(w) > -1; }); }
+
+// Snelle antwoorden op de knopjes, zonder AI-kosten.
+function slimAntwoord(ruw) {
+  var t = T();
+  var q = normaliseerCijfers((ruw || '').toLowerCase().trim());
+  var m = q.match(/(\d+(?:[.,]\d{1,2})?)/);
+  var budget = m ? parseFloat(m[1].replace(',', '.')) : null;
+  var lijst = gerechten.filter(function (g) { return !heeft(g, 'drank'); });
+  if (bevat(q, ['kip', 'chicken', 'poulet', 'دجاج'])) lijst = lijst.filter(function (g) { return heeft(g, 'kip'); });
+  if (bevat(q, ['pitt', 'spicy', 'épic', 'حار'])) lijst = lijst.filter(function (g) { return heeft(g, 'pittig'); });
+  if (bevat(q, ['vega', 'veggie', 'végé', 'نباتي'])) lijst = lijst.filter(function (g) { return heeft(g, 'vega') || heeft(g, 'vegan'); });
+  if (budget !== null) lijst = lijst.filter(function (g) { return Number(g.prijs) <= budget; });
+  lijst.sort(function (a, b) { return a.prijs - b.prijs; });
+
+  var antwoord;
+  if (!lijst.length) antwoord = t.none;
+  else {
+    var namen = lijst.slice(0, 4).map(function (g) { return g.naam + ' (' + prijsTekst(g.prijs) + ')'; }).join(lang === 'ar' ? '، ' : ', ');
+    antwoord = (budget !== null ? t.within.replace('{b}', prijsTekst(budget)) : t.options) + ': ' + namen + '.';
+  }
+  $('aiAnswer').textContent = antwoord;
+}
+
+var aiGeschiedenis = [];
+async function vraagNova(vraag) {
+  vraag = (vraag || '').trim().slice(0, 300);
+  if (!vraag) return;
+  var box = $('aiAnswer');
+  box.textContent = T().denkt;
+  $('aiQ').value = '';
+  try {
+    var res = await fetch('/.netlify/functions/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ actie: 'vraag', restaurant: restaurant.slug, message: vraag, language: lang, history: aiGeschiedenis.slice(-6) })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'AI');
+    box.textContent = data.answer;
+    aiGeschiedenis.push({ role: 'user', content: vraag }, { role: 'assistant', content: data.answer });
+  } catch (e) {
+    console.error(e);
+    box.textContent = T().geenAI;
+  }
+}
+
+/* ===================== Knoppen ===================== */
+function sluit(id) { $(id).classList.remove('open'); }
+$('close').onclick = function () { sluit('overlay'); };
+$('aiClose').onclick = function () { sluit('aiOverlay'); };
+['overlay', 'aiOverlay'].forEach(function (id) { $(id).addEventListener('click', function (e) { if (e.target === this) sluit(id); }); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { sluit('overlay'); sluit('aiOverlay'); } });
+$('ai').onclick = function () {
+  sluit('overlay');
+  $('aiOverlay').classList.add('open');
+  if (huidigGerecht) $('aiQ').value = huidigGerecht.naam + ': ';
+  $('aiQ').focus();
+};
+$('novaFloat').onclick = function () { $('aiOverlay').classList.add('open'); };
+$('search').addEventListener('input', render);
+$('aiSend').onclick = function () { vraagNova($('aiQ').value); };
+$('aiQ').addEventListener('keydown', function (e) { if (e.key === 'Enter') vraagNova(this.value); });
+
+laad();
+</script>
+</body>
+</html>
