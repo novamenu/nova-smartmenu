@@ -436,9 +436,9 @@ async function verplaats(lijst, i, richting, tabel) {
 async function vertaalTeksten(teksten) {
   var naar = andereTalen();
   if (!naar.length || !teksten.some(function (t) { return t && t.trim(); })) return null;
-  var res = await fetch('/.netlify/functions/ai', {
+  var res = await fetch(C.supabaseUrl + '/functions/v1/nova-ai', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (await token()) },
+    headers: { 'Content-Type': 'application/json', apikey: C.supabaseKey, Authorization: 'Bearer ' + (await token()) },
     body: JSON.stringify({ actie: 'vertaal', teksten: teksten, naar: naar })
   });
   var data = {};

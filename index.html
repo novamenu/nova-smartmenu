@@ -371,9 +371,10 @@ async function vraagNova(vraag) {
   box.textContent = T().denkt;
   $('aiQ').value = '';
   try {
-    var res = await fetch('/.netlify/functions/ai', {
+    var c = window.SMARTMENU || {};
+    var res = await fetch(c.supabaseUrl + '/functions/v1/nova-ai', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', apikey: c.supabaseKey },
       body: JSON.stringify({ actie: 'vraag', restaurant: restaurant.slug, message: vraag, language: lang, history: aiGeschiedenis.slice(-6) })
     });
     var data = await res.json();
